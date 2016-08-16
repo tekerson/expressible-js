@@ -9,13 +9,18 @@ const makeConstructor = () => function Constructor(...args) {
   return instance;
 };
 
-const makeProperty = (impl) => ({
+const property = (impl) => ({
   get() {
     return impl(...this[CONSTRUCTOR_ARGS]);
   },
 });
 
+const nullary = (impl) => property(
+  (...args) => () => impl(...args)
+);
+
 module.exports = {
   makeConstructor,
-  makeProperty,
+  property,
+  nullary,
 };

@@ -1,7 +1,8 @@
 const DataType = require('./DataType');
 
+const META = Symbol('META');
+
 const Expressible = (checkProperties, checkTypes) => (initialTypes) => {
-  const types = {};
   const operations = {};
 
   function AbstractType() {
@@ -12,11 +13,11 @@ const Expressible = (checkProperties, checkTypes) => (initialTypes) => {
 
   const addProperty = (type, op, prop) => {
     operations[op] = true;
-    Object.defineProperty(types[type].prototype, op, prop);
+    Object.defineProperty(AbstractType[type].prototype, op, prop);
   };
 
   const addOperation = (name, op) => {
-    Object.keys(checkTypes(name, types, op)).forEach(type => {
+    Object.keys(checkTypes(name, AbstractType, op)).forEach(type => {
       addProperty(type, name, op[type]);
     });
   };
@@ -33,7 +34,7 @@ const Expressible = (checkProperties, checkTypes) => (initialTypes) => {
     const Type = ctor;
     Type.prototype = makePrototype({});
     Type.prototype.constructor = ctor;
-    types[type] = ctor;
+    AbstractType[type] = ctor;
 
     Object.keys(checkProperties(type, operations, ops)).forEach(op => {
       addProperty(type, op, ops[op]);
@@ -47,12 +48,16 @@ const Expressible = (checkProperties, checkTypes) => (initialTypes) => {
   });
 
   return Object.assign(AbstractType, {
-    addDataType,
-    addOperation,
-    addOperations,
-
-    types,
+    [META]: {
+      addDataType,
+      addOperation,
+      addOperations,
+    },
   });
 };
 
-module.exports = Expressible;
+module.exports = Object.assign(Expressible, {
+  addDataType: (target, ...args) => target[META].addDataType(...args),
+  addOperation: (target, ...args) => target[META].addOperation(...args),
+  addOperations: (target, ...args) => target[META].addOperations(...args),
+});

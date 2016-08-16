@@ -1,8 +1,7 @@
 const test = require('tape'); // eslint-disable-line import/no-extraneous-dependencies
 
 const Expressible = require('./Expressible');
-const { makeProperty } = require('./DataType');
-const { nullary } = require('./Helpers');
+const { property, nullary } = require('./DataType');
 const { types: withTotalTypes, operations: withTotalOperations } = require('./AssertTotal');
 
 const total = Expressible(withTotalTypes, withTotalOperations);
@@ -12,15 +11,15 @@ test('creates subtypes', (t) => {
     Constant: {},
   });
 
-  const constant = Expr.types.Constant(1);
+  const constant = Expr.Constant(1);
 
   t.true(constant instanceof Expr);
-  t.true(constant instanceof Expr.types.Constant);
+  t.true(constant instanceof Expr.Constant);
   t.end();
 });
 
 test('can define multiple initial types', (t) => {
-  const { types: { Constant, Add } } = total({
+  const { Constant, Add } = total({
     Constant: {},
     Add: {},
   });
@@ -38,11 +37,11 @@ test('can add a type to an existing set', (t) => {
     Constant: {},
   });
 
-  Expr.addDataType('Add', {});
+  Expressible.addDataType(Expr, 'Add', {});
 
-  const add = Expr.types.Add();
+  const add = Expr.Add();
 
-  t.true(add instanceof Expr.types.Add);
+  t.true(add instanceof Expr.Add);
   t.true(add instanceof Expr);
   t.end();
 });
@@ -52,11 +51,11 @@ test('can add an operation to existing types', (t) => {
     Constant: {},
   });
 
-  Expr.addOperation('value', {
-    Constant: makeProperty((v) => v),
+  Expressible.addOperation(Expr, 'value', {
+    Constant: property((v) => v),
   });
 
-  const one = Expr.types.Constant(1);
+  const one = Expr.Constant(1);
 
   t.equal(one.value, 1);
   t.end();
@@ -67,16 +66,16 @@ test('can add multiple operation to existing types', (t) => {
     Constant: {},
   });
 
-  Expr.addOperations({
+  Expressible.addOperations(Expr, {
     value: {
-      Constant: makeProperty((v) => v),
+      Constant: property((v) => v),
     },
     negate: {
-      Constant: makeProperty((v) => -v),
+      Constant: property((v) => -v),
     },
   });
 
-  const one = Expr.types.Constant(1);
+  const one = Expr.Constant(1);
 
   t.equal(one.value, 1);
   t.end();
@@ -91,16 +90,16 @@ test('full example', (t) => {
       show: nullary((l, r) => `${l.show()} + ${r.show()}`),
     },
   });
-  const { Constant, Add } = Expr.types;
+  const { Constant, Add } = Expr;
 
-  Expr.addOperation('val', {
-    Constant: makeProperty((v) => v),
-    Add: makeProperty((l, r) => l.val + r.val),
+  Expressible.addOperation(Expr, 'val', {
+    Constant: property((v) => v),
+    Add: property((l, r) => l.val + r.val),
   });
 
-  const Neg = Expr.addDataType('Neg', {
+  const Neg = Expressible.addDataType(Expr, 'Neg', {
     show: nullary(v => `(-${v.show()})`),
-    val: makeProperty(v => -v.val),
+    val: property(v => -v.val),
   });
 
   const one = Constant(1);
