@@ -13,11 +13,11 @@ test('makeConstructor creates a new constructor', (t) => {
   t.end();
 });
 
-test('`makeProperty` creates a property that can be added to a prototype', (t) => {
+test('`property` creates a property that can be added to a prototype', (t) => {
   const expected = {};
 
   const Type = DataType.makeConstructor();
-  Object.defineProperty(Type.prototype, 'value', DataType.makeProperty(() => expected));
+  Object.defineProperty(Type.prototype, 'value', DataType.property(() => expected));
 
   const instance = Type();
 
@@ -25,11 +25,11 @@ test('`makeProperty` creates a property that can be added to a prototype', (t) =
   t.end();
 });
 
-test('`makeProperty` provides access to the constructor arguments', (t) => {
+test('`property` provides access to the constructor arguments', (t) => {
   const Type = DataType.makeConstructor();
 
-  Object.defineProperty(Type.prototype, 'first', DataType.makeProperty((fst) => fst));
-  Object.defineProperty(Type.prototype, 'second', DataType.makeProperty((fst, snd) => snd));
+  Object.defineProperty(Type.prototype, 'first', DataType.property((fst) => fst));
+  Object.defineProperty(Type.prototype, 'second', DataType.property((fst, snd) => snd));
 
   const expectedFirst = {};
   const expectedSecond = {};
@@ -40,15 +40,31 @@ test('`makeProperty` provides access to the constructor arguments', (t) => {
   t.end();
 });
 
-test('`makeProperty` can be used to create methods', (t) => {
+test('`property` can be used to create methods', (t) => {
   const Type = DataType.makeConstructor();
 
   Object.defineProperty(
-    Type.prototype, 'add', DataType.makeProperty((fst, snd) => (third) => fst + snd + third)
+    Type.prototype, 'add',
+    DataType.property((fst, snd) => (third) => fst + snd + third)
   );
 
   const instance = Type(7, 5);
 
   t.strictEqual(instance.add(3), 15);
+  t.end();
+});
+
+test('`nullary` creates a method that takes no parameters', (t) => {
+  const expected = {};
+
+  const Type = DataType.makeConstructor();
+  Object.defineProperty(
+    Type.prototype, 'value',
+    DataType.nullary((x) => x)
+  );
+
+  const instance = Type(expected);
+
+  t.strictEqual(instance.value(), expected);
   t.end();
 });

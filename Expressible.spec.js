@@ -1,8 +1,7 @@
 const test = require('tape'); // eslint-disable-line import/no-extraneous-dependencies
 
 const Expressible = require('./Expressible');
-const { makeProperty } = require('./DataType');
-const { nullary } = require('./Helpers');
+const { property, nullary } = require('./DataType');
 const { types: withTotalTypes, operations: withTotalOperations } = require('./AssertTotal');
 
 const total = Expressible(withTotalTypes, withTotalOperations);
@@ -53,7 +52,7 @@ test('can add an operation to existing types', (t) => {
   });
 
   Expressible.addOperation(Expr, 'value', {
-    Constant: makeProperty((v) => v),
+    Constant: property((v) => v),
   });
 
   const one = Expr.Constant(1);
@@ -69,10 +68,10 @@ test('can add multiple operation to existing types', (t) => {
 
   Expressible.addOperations(Expr, {
     value: {
-      Constant: makeProperty((v) => v),
+      Constant: property((v) => v),
     },
     negate: {
-      Constant: makeProperty((v) => -v),
+      Constant: property((v) => -v),
     },
   });
 
@@ -94,13 +93,13 @@ test('full example', (t) => {
   const { Constant, Add } = Expr;
 
   Expressible.addOperation(Expr, 'val', {
-    Constant: makeProperty((v) => v),
-    Add: makeProperty((l, r) => l.val + r.val),
+    Constant: property((v) => v),
+    Add: property((l, r) => l.val + r.val),
   });
 
   const Neg = Expressible.addDataType(Expr, 'Neg', {
     show: nullary(v => `(-${v.show()})`),
-    val: makeProperty(v => -v.val),
+    val: property(v => -v.val),
   });
 
   const one = Constant(1);
