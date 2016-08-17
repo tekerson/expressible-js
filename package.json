@@ -2,11 +2,11 @@
   "name": "expressible",
   "version": "2.0.0",
   "description": "A library that attempts to make it easier to overcome the expression problem ",
-  "main": "index.js",
+  "main": "expressible/index.js",
   "scripts": {
-    "lint": "eslint '**/*.js'",
-    "test": "tape '**/*.spec.js' | faucet",
-    "test:watch": "nodemon -q -x 'npm test'"
+    "lint": "eslint 'expressible/**/*.js'",
+    "test": "tape 'expressible/**/*.spec.js' | faucet",
+    "test:watch": "nodemon --quiet --watch 'expressible/' --exec 'npm run test'"
   },
   "repository": {
     "type": "git",
