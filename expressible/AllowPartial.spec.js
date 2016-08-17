@@ -4,34 +4,32 @@ const AllowPartial = require('./AllowPartial');
 
 const arbitrary = () => ({});
 
-test('returns the defined operations even if some are missing', (t) => {
-  const typeName = arbitrary();
+test('AllowPartial.types returns the defined operations even if some are missing', (t) => {
   const shouldDefine = {
     method1: arbitrary(),
     method2: arbitrary(),
   };
-  const defines = {
+  const define = {
     method1: arbitrary(),
   };
 
-  const actual = AllowPartial.types(typeName, shouldDefine, defines);
+  const actual = AllowPartial.types('NewType', shouldDefine, define);
 
-  t.strictEqual(actual, defines);
+  t.strictEqual(actual, define);
   t.end();
 });
 
-test('returns the defined Types even if some are missing', (t) => {
-  const operationName = arbitrary();
+test('AllowPartial.operations returns the defined types even if some are missing', (t) => {
   const shouldDefine = {
     Type1: arbitrary(),
     Type2: arbitrary(),
   };
-  const defines = {
+  const define = {
     Type1: arbitrary(),
   };
 
-  const actual = AllowPartial.operations(operationName, shouldDefine, defines);
+  const actual = AllowPartial.operations('newOperation', shouldDefine, define);
 
-  t.strictEqual(actual, defines);
+  t.strictEqual(actual, define);
   t.end();
 });

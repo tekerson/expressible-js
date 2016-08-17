@@ -4,10 +4,10 @@ const Expressible = require('./Expressible');
 const { property, nullary } = require('./DataType');
 const { types: withTotalTypes, operations: withTotalOperations } = require('./AssertTotal');
 
-const total = Expressible(withTotalTypes, withTotalOperations);
+const expressible = Expressible(withTotalTypes, withTotalOperations);
 
-test('creates subtypes', (t) => {
-  const Expr = total({
+test('Expressible creates a DataType that is a valid `instancesof` the Abstract Type', (t) => {
+  const Expr = expressible({
     Constant: {},
   });
 
@@ -18,8 +18,8 @@ test('creates subtypes', (t) => {
   t.end();
 });
 
-test('can define multiple initial types', (t) => {
-  const { Constant, Add } = total({
+test('Expressible defines multiple initial types', (t) => {
+  const { Constant, Add } = expressible({
     Constant: {},
     Add: {},
   });
@@ -32,8 +32,8 @@ test('can define multiple initial types', (t) => {
   t.end();
 });
 
-test('can add a type to an existing set', (t) => {
-  const Expr = total({
+test('Expressible.addDataType adds Data Type to an existing set', (t) => {
+  const Expr = expressible({
     Constant: {},
   });
 
@@ -46,8 +46,8 @@ test('can add a type to an existing set', (t) => {
   t.end();
 });
 
-test('can add an operation to existing types', (t) => {
-  const Expr = total({
+test('Expressible.addOperation adds operation to Data Types in an existing set', (t) => {
+  const Expr = expressible({
     Constant: {},
   });
 
@@ -61,8 +61,8 @@ test('can add an operation to existing types', (t) => {
   t.end();
 });
 
-test('can add multiple operation to existing types', (t) => {
-  const Expr = total({
+test('Expressible.addOperations adds multiple operation to existing Data Types', (t) => {
+  const Expr = expressible({
     Constant: {},
   });
 
@@ -78,34 +78,5 @@ test('can add multiple operation to existing types', (t) => {
   const one = Expr.Constant(1);
 
   t.equal(one.value, 1);
-  t.end();
-});
-
-test('full example', (t) => {
-  const Expr = total({
-    Constant: {
-      show: nullary(v => v.toString()),
-    },
-    Add: {
-      show: nullary((l, r) => `${l.show()} + ${r.show()}`),
-    },
-  });
-  const { Constant, Add } = Expr;
-
-  Expressible.addOperation(Expr, 'val', {
-    Constant: property((v) => v),
-    Add: property((l, r) => l.val + r.val),
-  });
-
-  const Neg = Expressible.addDataType(Expr, 'Neg', {
-    show: nullary(v => `(-${v.show()})`),
-    val: property(v => -v.val),
-  });
-
-  const one = Constant(1);
-  const two = Constant(2);
-  const expr = Add(Neg(one), two);
-
-  t.equal(`${expr.show()} = ${expr.val}`, '(-1) + 2 = 1');
   t.end();
 });

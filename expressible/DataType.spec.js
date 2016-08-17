@@ -2,7 +2,7 @@ const test = require('tape'); // eslint-disable-line import/no-extraneous-depend
 
 const DataType = require('./DataType');
 
-test('makeConstructor creates a new constructor', (t) => {
+test('DataType.makeConstructor creates a new constructor', (t) => {
   const Type = DataType.makeConstructor();
   const OtherType = DataType.makeConstructor();
 
@@ -13,7 +13,7 @@ test('makeConstructor creates a new constructor', (t) => {
   t.end();
 });
 
-test('`property` creates a property that can be added to a prototype', (t) => {
+test('DataType.property creates a property that can be added to a prototype', (t) => {
   const expected = {};
 
   const Type = DataType.makeConstructor();
@@ -25,7 +25,7 @@ test('`property` creates a property that can be added to a prototype', (t) => {
   t.end();
 });
 
-test('`property` provides access to the constructor arguments', (t) => {
+test('DataType.property provides access to the constructor arguments', (t) => {
   const Type = DataType.makeConstructor();
 
   Object.defineProperty(Type.prototype, 'first', DataType.property((fst) => fst));
@@ -40,7 +40,7 @@ test('`property` provides access to the constructor arguments', (t) => {
   t.end();
 });
 
-test('`property` can be used to create methods', (t) => {
+test('DataType.property can be used to create methods', (t) => {
   const Type = DataType.makeConstructor();
 
   Object.defineProperty(
@@ -54,7 +54,7 @@ test('`property` can be used to create methods', (t) => {
   t.end();
 });
 
-test('`nullary` creates a method that takes no parameters', (t) => {
+test('DataType.nullary creates a method that takes no parameters', (t) => {
   const expected = {};
 
   const Type = DataType.makeConstructor();
