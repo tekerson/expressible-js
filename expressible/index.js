@@ -11,8 +11,5 @@ module.exports = Object.assign({},
   {
     total: Expressible(AssertTotal.types, AssertTotal.operations),
     partial: Expressible(AllowPartial.types, AllowPartial.operation),
-
-    assertingTotal: AssertTotal,
-    allowingPartial: AllowPartial,
   }
 );

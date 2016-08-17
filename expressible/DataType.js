@@ -1,4 +1,8 @@
 /**
+ * @module
+ */
+
+/**
  * A Symbol to provide the "private" namespace on the DataType instance to store the arguments
  * that were passed to the Constructor
  *
@@ -22,6 +26,7 @@ const getInstance = (self, ctor) =>
 /**
  * Create a constructor for a new DataType
  *
+ * @alias module:DataType.makeConstructor
  * @returns {function} A Constructor function for a new DataType
  */
 const makeConstructor = () => function Constructor(...args) {
@@ -33,6 +38,7 @@ const makeConstructor = () => function Constructor(...args) {
 /**
  * Create a PropertyDescriptor by providing a function from the constructor arguments
  *
+ * @alias module:DataType.property
  * @see https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty
  * @param {function} impl A function that takes the DataType instances Constructor arguments
  * @returns {object} A Property Descriptor
@@ -46,6 +52,7 @@ const property = (impl) => ({
 /**
  * Create a PropertyDescriptor that is a nullary method
  *
+ * @alias module:DataType.nullary
  * @param {PropertyFunction} impl The implementation of the nullary member property
  * @returns {PropertyDescriptor}
  */
