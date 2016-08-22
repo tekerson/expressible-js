@@ -10,6 +10,6 @@ module.exports = Object.assign({},
   DataType,
   {
     total: Expressible(AssertTotal.types, AssertTotal.operations),
-    partial: Expressible(AllowPartial.types, AllowPartial.operation),
+    partial: Expressible(AllowPartial.types, AllowPartial.operations),
   }
 );
